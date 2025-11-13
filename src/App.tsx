@@ -5,22 +5,31 @@ import WelcomeMessage from "./WelcomeMessage";
 import TodoList from "./TodoList";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
-import { twMerge } from "tailwind-merge"; // ◀◀ 追加
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // ◀◀ 追加
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons"; // ◀◀ 追加
-
+import { twMerge } from "tailwind-merge";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import Confetti from "./Confetti"; 
+import goodstamp from "./goodstanp.jpg";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodoName, setNewTodoName] = useState("");
-  const [newTodoPriority, setNewTodoPriority] = useState(3);
   const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
   const [newTodoNameError, setNewTodoNameError] = useState("");
 
-  const [initialized, setInitialized] = useState(false); // ✅ 追加
-  const localStorageKey = "TodoApp"; // ✅ 追加
+  // 危険度・提出方法・時間を管理
+  const [newTodoMethod, setNewTodoMethod] = useState("");
+  const [newTodoDanger, setNewTodoDanger] = useState("");
+  const [newTodoTime, setNewTodoTime] = useState("");
 
-  // ✅ 初回のみ LocalStorage からデータ復元
+  const [initialized, setInitialized] = useState(false);
+  const localStorageKey = "TodoApp";
+
+  // 🌸 花吹雪アニメーション状態管理
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [message, setMessage] = useState("");
+
+  // 初期化処理
   useEffect(() => {
     const todoJsonStr = localStorage.getItem(localStorageKey);
     if (todoJsonStr && todoJsonStr !== "[]") {
@@ -36,7 +45,7 @@ const App = () => {
     setInitialized(true);
   }, []);
 
-  // ✅ todos が変更されるたびに保存
+  // ローカルストレージ更新
   useEffect(() => {
     if (initialized) {
       localStorage.setItem(localStorageKey, JSON.stringify(todos));
@@ -45,22 +54,31 @@ const App = () => {
 
   const uncompletedCount = todos.filter((todo: Todo) => !todo.isDone).length;
 
+  // ✅ 完了状態更新（花吹雪機能付き）
   const updateIsDone = (id: string, value: boolean) => {
-  const updatedTodos = todos.map((todo) => {
-    if (todo.id === id) {
-      return { ...todo, isDone: value }; // スプレッド構文
-    } else {
-      return todo;
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, isDone: value } : todo
+    );
+    setTodos(updatedTodos);
+
+    if (value) {
+      setMessage("やるじゃん！");
+      setShowConfetti(true);
     }
-  });
-  setTodos(updatedTodos);
   };
 
+  // ✏️ 編集機能
+  const updateTodo = (updated: Todo) => {
+    const newList = todos.map((t) => (t.id === updated.id ? updated : t));
+    setTodos(newList);
+  };
+
+  // 削除処理
   const remove = (id: string) => {
-  const updatedTodos = todos.filter((todo) => todo.id !== id);
-  setTodos(updatedTodos);
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  // 入力バリデーション
   const isValidTodoName = (name: string): string => {
     if (name.length < 2 || name.length > 32) {
       return "2文字以上、32文字以内で入力してください";
@@ -69,109 +87,116 @@ const App = () => {
     }
   };
 
+  // 入力更新
   const updateNewTodoName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodoNameError(isValidTodoName(e.target.value)); // ◀◀ 追加
+    setNewTodoNameError(isValidTodoName(e.target.value));
     setNewTodoName(e.target.value);
   };
 
-  const updateNewTodoPriority = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodoPriority(Number(e.target.value));
-  };
-
+  // 期限更新
   const updateDeadline = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dt = e.target.value; // UIで日時が未設定のときは空文字列 "" が dt に格納される
-    console.log(`UI操作で日時が "${dt}" (${typeof dt}型) に変更されました。`);
+    const dt = e.target.value;
     setNewTodoDeadline(dt === "" ? null : new Date(dt));
   };
 
+  // 新規タスク追加
   const addNewTodo = () => {
-    // ▼▼ 編集
     const err = isValidTodoName(newTodoName);
     if (err !== "") {
       setNewTodoNameError(err);
       return;
     }
+
     const newTodo: Todo = {
       id: uuid(),
       name: newTodoName,
       isDone: false,
-      priority: newTodoPriority,
       deadline: newTodoDeadline,
+      method: newTodoMethod,
+      danger: newTodoDanger,
+      time: newTodoTime,
     };
+
     const updatedTodos = [...todos, newTodo];
     setTodos(updatedTodos);
+
+    // 入力欄リセット
     setNewTodoName("");
-    setNewTodoPriority(3);
     setNewTodoDeadline(null);
+    setNewTodoMethod("");
+    setNewTodoDanger("");
+    setNewTodoTime("");
   };
 
+  // 完了済み削除
   const removeCompletedTodos = () => {
-  const updatedTodos = todos.filter((todo) => !todo.isDone);
-  setTodos(updatedTodos);
-};
+    setTodos(todos.filter((todo) => !todo.isDone));
+  };
 
   return (
-    <div className="mx-4 mt-10 max-w-2xl md:mx-auto">
-      <h1 className="mb-4 text-2xl font-bold">TodoApp</h1>
-      <div className="mb-4">
-        <WelcomeMessage
-          name="寝屋川タヌキ"
-          uncompletedCount={uncompletedCount}
-        />
-      </div>
-      <TodoList todos={todos} updateIsDone={updateIsDone} remove={remove} />
-
-      <div className="mt-5 space-y-2 rounded-md border p-3">
-        <h2 className="text-lg font-bold">新しいタスクの追加</h2>
-        {/* 編集: ここから... */}
-        <div>
-          <div className="flex items-center space-x-2">
-            <label className="font-bold" htmlFor="newTodoName">
-              名前
-            </label>
-            <input
-              id="newTodoName"
-              type="text"
-              value={newTodoName}
-              onChange={updateNewTodoName}
-              className={twMerge(
-                "grow rounded-md border p-2",
-                newTodoNameError && "border-red-500 outline-red-500"
-              )}
-              placeholder="2文字以上、32文字以内で入力してください"
+    <div className="mx-4 mt-10 max-w-2xl md:mx-auto font-hand relative overflow-hidden">
+      {/* 🌸 花吹雪アニメーション */}
+      {showConfetti && (
+        <>
+          <Confetti onEnd={() => setShowConfetti(false)} />
+          <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-50 animate-bounce">
+            <span className="text-5xl font-bold text-pink-500 mb-2">{message}</span>
+            <img
+              src={goodstamp}
+              alt="Good Job!"
+              className="w-40 h-auto drop-shadow-lg"
             />
           </div>
-          {newTodoNameError && (
-            <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500">
-              <FontAwesomeIcon
-                icon={faTriangleExclamation}
-                className="mr-0.5"
-              />
-              <div>{newTodoNameError}</div>
-            </div>
-          )}
-        </div>
-        {/* ...ここまで */}
+        </>
+      )}
 
-        <div className="flex gap-5">
-          <div className="font-bold">優先度</div>
-          {[1, 2, 3].map((value) => (
-            <label key={value} className="flex items-center space-x-1">
-              <input
-                id={`priority-${value}`}
-                name="priorityGroup"
-                type="radio"
-                value={value}
-                checked={newTodoPriority === value}
-                onChange={updateNewTodoPriority}
-              />
-              <span>{value}</span>
-            </label>
-          ))}
+      <h1 className="text-4xl mb-4 text-center font-bold">To Do リスト</h1>
+      <p className="text-center text-lg mb-1">
+        こんにちは、PenguinPetraさん。今日も一日がんばろう!
+      </p>
+      <p className="text-center mb-8">
+        未達成のタスクが「{uncompletedCount}」コあるよ。
+      </p>
+
+      <TodoList
+        todos={todos}
+        updateIsDone={updateIsDone}
+        updateTodo={updateTodo} // ✏️ 編集機能追加
+        remove={remove}
+      />
+
+      {/* 新規タスク追加フォーム */}
+      <div className="mt-10 space-y-3 rounded-3xl border-2 border-green-900 bg-green-50 p-5 shadow-md">
+        <h2 className="text-lg font-bold">新しいタスクの追加</h2>
+
+        {/* タスク名 */}
+        <div className="flex items-center space-x-2">
+          <label className="font-bold w-20" htmlFor="newTodoName">
+            名前
+          </label>
+          <input
+            id="newTodoName"
+            type="text"
+            value={newTodoName}
+            onChange={updateNewTodoName}
+            className={twMerge(
+              "grow rounded-md border p-2",
+              newTodoNameError && "border-red-500 outline-red-500"
+            )}
+            placeholder="2文字以上、32文字以内で入力してください"
+          />
         </div>
 
+        {newTodoNameError && (
+          <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500">
+            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-0.5" />
+            <div>{newTodoNameError}</div>
+          </div>
+        )}
+
+        {/* 期限 */}
         <div className="flex items-center gap-x-2">
-          <label htmlFor="deadline" className="font-bold">
+          <label htmlFor="deadline" className="font-bold w-20">
             期限
           </label>
           <input
@@ -187,6 +212,51 @@ const App = () => {
           />
         </div>
 
+        {/* 提出方法 */}
+        <div className="flex items-center space-x-2">
+          <label className="font-bold w-20" htmlFor="newTodoMethod">
+            提出方法
+          </label>
+          <input
+            id="newTodoMethod"
+            type="text"
+            value={newTodoMethod}
+            onChange={(e) => setNewTodoMethod(e.target.value)}
+            className="rounded-md border p-2 grow"
+            placeholder="例：Google Classroom"
+          />
+        </div>
+
+        {/* 危険度 */}
+        <div className="flex items-center space-x-2">
+          <label className="font-bold w-20" htmlFor="newTodoDanger">
+            危険度
+          </label>
+          <input
+            id="newTodoDanger"
+            type="text"
+            value={newTodoDanger}
+            onChange={(e) => setNewTodoDanger(e.target.value)}
+            className="rounded-md border p-2 grow"
+            placeholder="例：高 / 中 / 低"
+          />
+        </div>
+
+        {/* 課題時間 */}
+        <div className="flex items-center space-x-2">
+          <label className="font-bold w-20" htmlFor="newTodoTime">
+            時間
+          </label>
+          <input
+            id="newTodoTime"
+            type="text"
+            value={newTodoTime}
+            onChange={(e) => setNewTodoTime(e.target.value)}
+            className="rounded-md border p-2 grow"
+            placeholder="例：30分、1時間など"
+          />
+        </div>
+
         <button
           type="button"
           onClick={addNewTodo}
@@ -199,15 +269,13 @@ const App = () => {
         </button>
       </div>
 
-        <button
-          type="button"
-          onClick={removeCompletedTodos}
-          className={
-            "mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
-          }
-        >
-          完了済みのタスクを削除
-        </button>
+      <button
+        type="button"
+        onClick={removeCompletedTodos}
+        className="mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
+      >
+        完了済みのタスクを消去
+      </button>
     </div>
   );
 };
