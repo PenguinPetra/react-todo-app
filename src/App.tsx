@@ -9,7 +9,8 @@ import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import Confetti from "./Confetti"; 
-import goodstamp from "./goodstanp.jpg";
+import goodstamp from "./goodstamp.jpg";
+import { motion, AnimatePresence } from "framer-motion";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -135,20 +136,52 @@ const App = () => {
 
   return (
     <div className="mx-4 mt-10 max-w-2xl md:mx-auto font-hand relative overflow-hidden">
-      {/* 🌸 花吹雪アニメーション */}
       {showConfetti && (
         <>
           <Confetti onEnd={() => setShowConfetti(false)} />
-          <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-50 animate-bounce">
-            <span className="text-5xl font-bold text-pink-500 mb-2">{message}</span>
-            <img
+          <AnimatePresence>
+            <motion.div
+              key="yay"
+              initial={{ opacity: 0, scale: 0.8, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="fixed top-1/3 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-50"
+            >
+              <motion.span
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1.05 }}
+                transition={{
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 0.8,
+              }}
+              className="text-5xl font-bold text-pink-500 mb-2 font-hand"
+            >
+              {message}
+            </motion.span>
+
+            {/* 🌸 スタンプアニメーション */}
+            <motion.img
               src={goodstamp}
               alt="Good Job!"
-              className="w-40 h-auto drop-shadow-lg"
+              className="w-40 h-auto drop-shadow-xl"
+              initial={{ opacity: 0, scale: 0.2, rotate: -25 }}
+              animate={{
+                opacity: 1,
+                scale: [0.2, 1.3, 1],
+                rotate: [ -25, 0, 0 ],
+              }}
+              transition={{
+                duration: 0.6,
+                ease: "easeOut",
+              }}
             />
-          </div>
-        </>
-      )}
+          </motion.div>
+        </AnimatePresence>
+      </>
+    )}
+
 
       <h1 className="text-4xl mb-4 text-center font-bold">To Do リスト</h1>
       <p className="text-center text-lg mb-1">
