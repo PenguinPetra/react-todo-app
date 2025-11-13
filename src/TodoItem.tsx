@@ -20,16 +20,17 @@ const TodoItem = (props: Props) => {
   };
 
   return (
-    <div className="bg-green-200 border-2 border-green-900 rounded-3xl p-6 shadow-md mb-4">
+    // 🟡 背景はそのまま・文字は黒指定
+    <div className="bg-yellow-200 border-2 border-green-700 rounded-3xl p-6 shadow-md mb-4 text-black">
       {isEditing ? (
         <>
           <input
             type="text"
             value={editData.name}
             onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-            className="mb-2 w-full rounded-md border p-1"
+            className="mb-2 w-full rounded-md border p-1 text-black" // ← 編集中も黒文字
           />
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-black">
             <label>期限：</label>
             <input
               type="datetime-local"
@@ -44,10 +45,10 @@ const TodoItem = (props: Props) => {
                   deadline: e.target.value ? new Date(e.target.value) : null,
                 })
               }
-              className="rounded-md border p-1"
+              className="rounded-md border p-1 text-black"
             />
           </div>
-          <div className="flex gap-2 mt-1">
+          <div className="flex gap-2 mt-1 text-black">
             <label>提出方法：</label>
             <input
               type="text"
@@ -55,10 +56,10 @@ const TodoItem = (props: Props) => {
               onChange={(e) =>
                 setEditData({ ...editData, method: e.target.value })
               }
-              className="rounded-md border p-1"
+              className="rounded-md border p-1 text-black"
             />
           </div>
-          <div className="flex gap-2 mt-1">
+          <div className="flex gap-2 mt-1 text-black">
             <label>危険度：</label>
             <input
               type="text"
@@ -66,10 +67,10 @@ const TodoItem = (props: Props) => {
               onChange={(e) =>
                 setEditData({ ...editData, danger: e.target.value })
               }
-              className="rounded-md border p-1"
+              className="rounded-md border p-1 text-black"
             />
           </div>
-          <div className="flex gap-2 mt-1">
+          <div className="flex gap-2 mt-1 text-black">
             <label>時間：</label>
             <input
               type="text"
@@ -77,9 +78,10 @@ const TodoItem = (props: Props) => {
               onChange={(e) =>
                 setEditData({ ...editData, time: e.target.value })
               }
-              className="rounded-md border p-1"
+              className="rounded-md border p-1 text-black"
             />
           </div>
+
           <div className="mt-3 space-x-2">
             <button
               onClick={handleSave}
@@ -97,7 +99,7 @@ const TodoItem = (props: Props) => {
         </>
       ) : (
         <>
-          <div className="flex items-center mb-3">
+          <div className="flex items-center mb-3 text-black">
             <input
               type="checkbox"
               checked={todo.isDone}
@@ -106,21 +108,31 @@ const TodoItem = (props: Props) => {
             />
             <span className="text-xl font-bold">{todo.name}</span>
           </div>
-          <p>提出期限：{todo.deadline ? dayjs(todo.deadline).format("YYYY/MM/DD HH:mm") : "未設定"}</p>
-          <p>提出方法：{todo.method || "未設定"}</p>
-          <p>危険度：{todo.danger || "未設定"}</p>
-          <p>課題にかかる時間：{todo.time || "未設定"}</p>
 
+          {/* 🖋 文字をすべて黒に */}
+          <p className="text-black">
+            提出期限：
+            {todo.deadline
+              ? dayjs(todo.deadline).format("YYYY/MM/DD HH:mm")
+              : "未設定"}
+          </p>
+          <p className="text-black">提出方法：{todo.method || "未設定"}</p>
+          <p className="text-black">危険度：{todo.danger || "未設定"}</p>
+          <p className="text-black">
+            課題にかかる時間：{todo.time || "未設定"}
+          </p>
+
+          {/* 🧩 ボタンは白文字のまま */}
           <div className="mt-3 space-x-2">
             <button
               onClick={() => setIsEditing(true)}
-              className="rounded-md bg-yellow-400 text-white px-3 py-1 font-bold hover:bg-yellow-500"
+              className="mt-5 rounded-md bg-green-600 px-3 py-1 font-bold text-white hover:bg-green-600"
             >
               編集
             </button>
             <button
               onClick={() => props.remove(todo.id)}
-              className="rounded-md bg-red-400 text-white px-3 py-1 font-bold hover:bg-red-600"
+              className="mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
             >
               除去
             </button>
