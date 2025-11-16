@@ -20,7 +20,6 @@ const TodoItem = (props: Props) => {
   };
 
   return (
-    // 🟡 背景はそのまま・文字は黒指定
     <div className="bg-yellow-200 border-2 border-green-700 rounded-3xl p-6 shadow-md mb-4 text-black">
       {isEditing ? (
         <>
@@ -28,7 +27,7 @@ const TodoItem = (props: Props) => {
             type="text"
             value={editData.name}
             onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-            className="mb-2 w-full rounded-md border p-1 text-black" // ← 編集中も黒文字
+            className="mb-2 w-full rounded-md border p-1 text-black" 
           />
           <div className="flex gap-2 text-black">
             <label>期限：</label>
@@ -109,7 +108,6 @@ const TodoItem = (props: Props) => {
             <span className="text-xl font-bold">{todo.name}</span>
           </div>
 
-          {/* 🖋 文字をすべて黒に */}
           <p className="text-black">
             提出期限：
             {todo.deadline
@@ -122,7 +120,6 @@ const TodoItem = (props: Props) => {
             課題にかかる時間：{todo.time || "未設定"}
           </p>
 
-          {/* 🧩 ボタンは白文字のまま */}
           <div className="mt-3 space-x-2">
             <button
               onClick={() => setIsEditing(true)}

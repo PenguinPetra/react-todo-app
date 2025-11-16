@@ -1,9 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-/**
- * Confetti（桜吹雪）アニメーション
- * 花びらがふわっと舞う優しい春の雰囲気
- */
 const Confetti = ({ onEnd }: { onEnd: () => void }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -71,7 +67,6 @@ const Confetti = ({ onEnd }: { onEnd: () => void }) => {
     };
     animate();
 
-    // 4秒後に終了
     const timeout = setTimeout(() => {
       cancelAnimationFrame(animationFrame);
       onEnd();

@@ -5,7 +5,7 @@ import type { Todo } from "./types";
 type Props = {
   todos: Todo[];
   updateIsDone: (id: string, value: boolean) => void;
-  updateTodo: (updated: Todo) => void; // ← これを追加！
+  updateTodo: (updated: Todo) => void; 
   remove: (id: string) => void;
 };
 
@@ -17,7 +17,7 @@ const TodoList = ({ todos, updateIsDone, updateTodo, remove }: Props) => {
           key={todo.id}
           todo={todo}
           updateIsDone={updateIsDone}
-          updateTodo={updateTodo} // ← 渡す
+          updateTodo={updateTodo} 
           remove={remove}
         />
       ))}

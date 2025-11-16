@@ -7,16 +7,13 @@ import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import Confetti from "./Confetti"; // 🌸 花びらアニメーション
-import Stars from "./Stars"; // 🌠 流れ星アニメーション
-import goodstamp from "./goodstamp.jpg"; // 💮 スタンプ画像
-import stampSound from "./stamp-sound.mp3"; // 🔊 効果音ファイル
-import { motion, AnimatePresence } from "framer-motion"; // 🎬 アニメーション制御
+import Confetti from "./Confetti"; 
+import Stars from "./Stars"; 
+import goodstamp from "./goodstamp.jpg"; 
+import stampSound from "./stamp-sound.mp3"; 
+import { motion, AnimatePresence } from "framer-motion"; 
 
 const App = () => {
-  // -------------------------------
-  // 🧠 State 管理
-  // -------------------------------
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodoName, setNewTodoName] = useState("");
   const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
@@ -29,12 +26,8 @@ const App = () => {
   const [message, setMessage] = useState("");
   const localStorageKey = "TodoApp";
 
-  // 効果音の準備
   const sound = new Audio(stampSound);
 
-  // -------------------------------
-  // 🔁 初期化処理
-  // -------------------------------
   useEffect(() => {
     const todoJsonStr = localStorage.getItem(localStorageKey);
     if (todoJsonStr && todoJsonStr !== "[]") {
@@ -50,18 +43,12 @@ const App = () => {
     setInitialized(true);
   }, []);
 
-  // -------------------------------
-  // 💾 ローカルストレージ更新
-  // -------------------------------
   useEffect(() => {
     if (initialized) {
       localStorage.setItem(localStorageKey, JSON.stringify(todos));
     }
   }, [todos, initialized]);
 
-  // -------------------------------
-  // ✅ タスク完了処理（花びら＋音＋スタンプ）
-  // -------------------------------
   const updateIsDone = (id: string, value: boolean) => {
     const updatedTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, isDone: value } : todo
@@ -72,7 +59,6 @@ const App = () => {
       setMessage("やるじゃん！");
       setShowConfetti(true);
 
-      // 効果音を再生
       setTimeout(() => {
         sound.currentTime = 0;
         sound.play();
@@ -80,20 +66,15 @@ const App = () => {
     }
   };
 
-  // ✏️ 編集機能
   const updateTodo = (updated: Todo) => {
     const newList = todos.map((t) => (t.id === updated.id ? updated : t));
     setTodos(newList);
   };
 
-  // ❌ タスク削除
   const remove = (id: string) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  // -------------------------------
-  // ➕ 新規追加
-  // -------------------------------
   const isValidTodoName = (name: string): string => {
     if (name.length < 2 || name.length > 32) {
       return "2文字以上、32文字以内で入力してください";
@@ -137,25 +118,21 @@ const App = () => {
     setNewTodoTime("");
   };
 
-  // ✅ 完了済み削除
   const removeCompletedTodos = () => {
     setTodos(todos.filter((todo) => !todo.isDone));
   };
 
   const uncompletedCount = todos.filter((todo: Todo) => !todo.isDone).length;
 
-  // -------------------------------
-  // 🎬 画面描画
-  // -------------------------------
   return (
     <div className="relative min-h-screen text-white font-hand overflow-hidden">
-      {/* 🌌 夜空グラデーション背景 */}
+      {/* 夜空グラデーション背景 */}
       <div className="fixed inset-0 -z-10 bg-linear-to-b from-[#1b2e6d] via-[#30458e] to-[#4a6ab5]" />
 
-      {/* 🌠 流れ星（UIの背面） */}
+      {/* 流れ星（UIの背面） */}
       <Stars />
 
-      {/* 🌸 花びら + スタンプ */}
+      {/* 花びら + スタンプ */}
       {showConfetti && (
         <>
           <Confetti onEnd={() => setShowConfetti(false)} />
@@ -201,7 +178,7 @@ const App = () => {
         </>
       )}
 
-      {/* 📝 メインUI */}
+      {/* メインUI */}
       <div className="mx-4 mt-10 max-w-2xl md:mx-auto">
         <h1 className="text-4xl mb-4 text-center font-bold">To Do リスト</h1>
         <p className="text-center text-lg mb-1">
@@ -218,7 +195,7 @@ const App = () => {
           remove={remove}
         />
 
-        {/* ➕ 新規追加フォーム */}
+        {/* 新規追加フォーム */}
         <div className="mt-10 space-y-3 rounded-3xl border-2 border-green-700 bg-green-100/90 p-5 shadow-md">
           <h2 className="text-lg font-bold text-black">新しいタスクの追加</h2>
 
@@ -310,7 +287,7 @@ const App = () => {
             />
           </div>
 
-          {/* 追加ボタン（白文字のまま） */}
+          {/* 追加ボタン */}
           <button
             type="button"
             onClick={addNewTodo}
@@ -323,7 +300,7 @@ const App = () => {
           </button>
         </div>
 
-        {/* 完了タスク削除ボタン（白文字のまま） */}
+        {/* 完了タスク削除ボタン */}
         <button
           type="button"
           onClick={removeCompletedTodos}

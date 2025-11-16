@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./starAnimation.css"; // ✅ ファイル名変更済み版
+import "./starAnimation.css"; // 
 
 const Stars: React.FC = () => {
   useEffect(() => {
@@ -10,7 +10,6 @@ const Stars: React.FC = () => {
       const star = document.createElement("div");
       star.classList.add("shooting-star");
 
-      // ランダムな位置（上半分中心）
       star.style.top = Math.random() * 40 + "%";
       star.style.left = Math.random() * 80 + "%";
 
@@ -23,9 +22,8 @@ const Stars: React.FC = () => {
       }, 1500);
     };
 
-    // 🌠 10秒ごとに4つ流星（0.5秒間隔）
     const startInterval = setInterval(() => {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 9; i++) {
         setTimeout(createStar, i * 500);
       }
     }, 10000);

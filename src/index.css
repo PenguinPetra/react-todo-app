@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* ---- ローカルフォント設定 ---- */
 @font-face {
   font-family: "yosugara";
   src: local("yosugara ver12 中"), local("yosugara ver12"),
@@ -9,7 +8,6 @@
   font-style: normal;
 }
 
-/* ---- 全体設定 ---- */
 body {
   font-family: "yosugara", sans-serif;
   background-color: #f9fafb;

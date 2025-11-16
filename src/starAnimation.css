@@ -2,14 +2,14 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  z-index: -5; /* 背景よりもさらに下 */
+  z-index: -5; 
 }
 
-/* 🌠 流れ星 */
+/* 流れ星 */
 .shooting-star {
   position: absolute;
-  width: 10px; /* ← 太く */
-  height: 300px; /* ← 長く */
+  width: 10px; 
+  height: 300px; 
   background: linear-gradient(45deg, rgba(255,255,255,0.9), transparent);
   opacity: 0;
   border-radius: 50%;
@@ -19,7 +19,7 @@
   animation: shoot 1.5s linear forwards;
 }
 
-/* 🌠 流れ星の動き */
+/* 流れ星の動き */
 @keyframes shoot {
   0% {
     opacity: 0;
