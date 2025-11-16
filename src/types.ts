@@ -5,5 +5,5 @@ export type Todo = {
   deadline: Date | null;
   method?: string; // 提出方法
   danger?: string; // 危険度
-  time?: string;   // 所要時間
+  time?: string;   // 課題にかかる時間
 };
