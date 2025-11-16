@@ -4,7 +4,7 @@
 https://penguinpetra.github.io/react-todo-app/
 
 アプリの全体UI
-./images/ToDo_UI.png
+./images/ToDO_UI.png
 
 ---
 
