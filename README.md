@@ -3,7 +3,7 @@
 ## Todoアプリをホストしている GitHub Pages の URL
 https://penguinpetra.github.io/react-todo-app/
 
-[アプリの全体UI](./images/ToDO_UI.png)
+![アプリの全体UI](./images/ToDO_UI.png)
 
 ---
 
@@ -20,13 +20,9 @@ https://penguinpetra.github.io/react-todo-app/
 
 ---
 
----
-
 ## コンセプト
 このアプリは、単なるタスク管理ツールではありません。  
 **「楽しみながら続けられる」** にこだわり、タスク達成時に花びらが舞ったり、効果音が鳴ったりすることで**達成感とやる気**を引き出す設計になっています。
-
----
 
 ---
 
@@ -40,9 +36,6 @@ React × TypeScript で作られたToDoアプリです。
 - 課題にかかる時間（分単位、数値のみ入力）
 
 タスクは `localStorage` に保存されるので、ブラウザを閉じてもデータが消えません。
-
----
-
 
 ---
 
