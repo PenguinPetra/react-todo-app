@@ -211,6 +211,7 @@ const App = () => {
           To Do リスト
         </h1>
         <p className="text-center mb-8">
+          こんちにちは、PneguinPetra。今日もがんばろう!<br />
           未達成のタスクが「{uncompletedCount}」コあるよ。
         </p>
 
@@ -336,13 +337,13 @@ const App = () => {
           </button>
         </div>
 
-        {/* 完了済削除 */}
+        {/* 完了済消去 */}
         <button
           type="button"
           onClick={removeCompletedTodos}
           className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md font-bold"
         >
-          完了済みタスクを削除
+          完了済みタスクを消去
         </button>
       </div>
     </div>
