@@ -3,7 +3,7 @@
 ## Todoアプリをホストしている GitHub Pages の URL
 https://penguinpetra.github.io/react-todo-app/
 
-![アプリの全体UI](./images/ToDO_UI.png)
+![アプリの全体UI](./images/ToDoApp_UI.png)
 
 ---
 
